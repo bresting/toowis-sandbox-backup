@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+    const WORD_DICTIONARY = [
+      , { LOGIC_NAME: '번호'    , PHYCS_NAME: 'NO'    }
+      , { LOGIC_NAME: '계좌'    , PHYCS_NAME: 'ACT'   }
+      , { LOGIC_NAME: '입력'    , PHYCS_NAME: 'INP'   }
+      , { LOGIC_NAME: '계좌번호', PHYCS_NAME: 'ACTNO' }
+    ];
+    
+    function convert(searchWord, resultList, converted = []) {
+        var remainWord  = searchWord;
+        var filteredLit = [];
+        
+        for (var idx = 0; idx < searchWord.length; idx++ ) {
+            var tmpWord = searchWord.substr(idx, searchWord.length);
+            
+            // SELECT ... WHERE #{tmpWord} LIKE LOGIC_NAME + '%'
+            filteredLit = WORD_DICTIONARY.filter( m => tmpWord.startsWith(m.LOGIC_NAME) );
+    
+            if ( 0 < filteredLit.length ) {
+                remainWord = searchWord.substr(0, idx);  // 검색에서 제외된 단어 - [X][검색] -> [X]
+                searchWord       = tmpWord;              // 검색단어             - [X][검색] -> [검색]
+                break;
+            }
+        }
+        
+        // 단어 검색 안된 경우
+        if ( remainWord != "" ) {
+            converted.push("*" + remainWord);
+        }
+            
+        for (var idx = 0; idx < filteredLit.length; idx++ ) {
+            var remain       = searchWord.substr(filteredLit[idx].LOGIC_NAME.length);
+            var newConverted = converted.slice(0); // 전체Push
+            newConverted.push( filteredLit[idx].PHYCS_NAME )
+            
+            if ( remain.length == 0 ) {
+                resultList.push( newConverted.join("_") );
+            } else {
+                convert(remain, resultList, newConverted);  // 재귀호출
+            }
+        }
+        
+        // WORD_DICTIONARY에 없는 경우
+        if ( filteredLit.length == 0 ) {
+            resultList.push(converted.join(""));
+        }
+    }
+    
+    var resultList = new Array();
+    convert("입력계좌번호", resultList);
+    convert("처리계좌번호", resultList);
+    convert("구현방법"    , resultList);
+    convert("구현코드"    , resultList);
+    convert("계좌구현번호", resultList);
+    
+    for (var i = 0; i< resultList.length; i++) {
+        console.log(resultList[i]);
+    }
+    
+    </script>
+</head>
+<body>
+</body>
+</html>

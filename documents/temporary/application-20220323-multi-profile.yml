@@ -1,0 +1,80 @@
+########################################################################################################################
+# 1. profiles value 할당
+# java -jar 파일명.jar --spring.profiles.active=profiles값 (택1)
+# java -Dspring.profiles.active=profiles값 -jar 파일명.jar (택2)
+#
+# 2. profiles value 할당
+# Edit Configurations > Run/Debug Configurations > Active Profiles
+#
+# classpath:logback-${spring.profiles.active}.xml
+########################################################################################################################
+
+# 공통설정 & 미설정
+application: 
+  version: 1.0.0
+  title: sandbox
+  
+server:
+  port: 7070
+
+logging:
+  config : classpath:logback.xml
+
+spring:
+  datasource:
+    hikari:
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: "jdbc:log4jdbc:postgresql://localhost:5432/testdb"
+      username: ENC(4yFfKJebdAbqQoN13vuYF6BHAzB26/Lc)
+      password: ENC(4yFfKJebdAbqQoN13vuYF6BHAzB26/Lc)
+      connection-test-query: SELECT 1
+      minimum-idle: 2
+      maximum-pool-size: 2
+      auto-commit: false
+      pool-name: pool-sandbox
+
+    custom:
+      #driver-class-name: org.postgresql.Driver
+      #jdbc-url: jdbc:postgresql://localhost:5432/testdb
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: jdbc:log4jdbc:postgresql://localhost:5432/testdb
+      username: postgres
+      password: postgres
+
+### local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    hikari:
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: "jdbc:log4jdbc:postgresql://localhost:5432/testdb"
+      username: ENC(4yFfKJebdAbqQoN13vuYF6BHAzB26/Lc)
+      password: ENC(4yFfKJebdAbqQoN13vuYF6BHAzB26/Lc)
+      connection-test-query: SELECT 2
+      minimum-idle: 2
+      maximum-pool-size: 2
+      auto-commit: false
+      pool-name: pool-jiniworld
+
+### dev
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    hikari:
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: "jdbc:log4jdbc:postgresql://localhost:5432/testdb"
+      username: ENC(4yFfKJebdAbqQoN13vuYF6BHAzB26/Lc)
+      password: ENC(4yFfKJebdAbqQoN13vuYF6BHAzB26/Lc)
+      connection-test-query: SELECT 3
+      minimum-idle: 2
+      maximum-pool-size: 2
+      auto-commit: false
+      pool-name: pool-jiniworld
